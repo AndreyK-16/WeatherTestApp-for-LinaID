@@ -2,20 +2,21 @@
 //  ContentView.swift
 //  WeatherTestApp for LinaID
 //
-//  Created by Andrey Kaldyaev on 11.02.2026.
-//
 
 import SwiftUI
 
 struct ContentView: View {
+    @State private var apiKey: String? = KeychainStorage.loadOWMAPIKey()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if let apiKey = apiKey, !apiKey.isEmpty {
+            WeatherListView(apiKey: apiKey)
+        } else {
+            WelcomeView { savedKey in
+                KeychainStorage.saveOWMAPIKey(savedKey)
+                apiKey = savedKey
+            }
         }
-        .padding()
     }
 }
 
